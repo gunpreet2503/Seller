@@ -1,52 +1,42 @@
-package com.seller.qa.base;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
+package Selenium;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
-import com.seller.qa.util.WebEventListener;
+public class Alerts {
+    public static void main(String[] args) throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "/Users/gunpreet/Downloads/chromedriver-mac-x64 8/chromedriver");
+        WebDriver driver = new ChromeDriver();
+            driver.get("https://www.youtube.com/watch?v=sUSAOaPYbAk");
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            Actions actions = new Actions(driver);
 
+            WebElement playButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@title='Play (k)']")));
+            playButton.click();
+            actions.moveToElement(driver.findElement(By.xpath("//div//video[@class='video-stream html5-main-video']"))).perform();
+            WebElement pauseButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@title='Pause (k)']")));
+            pauseButton.click();
 
-public class base {
-	
-	public static WebDriver driver;
-	public static Properties prop;
-	public  static EventFiringWebDriver e_driver;
-	public static WebEventListener eventListener;
-	
-	public base() throws IOException {
-		
-		prop =new Properties();
-		FileInputStream ip= new FileInputStream(System.getProperty("user.dir")+ "/src/main/java/com/seller/qa/configs/config");
-		prop.load(ip);
-		
-	}
-	public static void initialization() throws IOException{
-		String browserName = prop.getProperty("browser");
-		
-		if(browserName.equals("chrome")){
-			System.setProperty("webdriver.chrome.driver", "/Users/gunpreet/Downloads/chromedriver-mac-x64 6/chromedriver");	
-			driver = new ChromeDriver();
-		}
-			
-			e_driver = new EventFiringWebDriver(driver);
-			// Now create object of EventListerHandler to register it with EventFiringWebDriver
-			eventListener = new WebEventListener();
-			e_driver.register(eventListener);
-			driver = e_driver;
-			
-			 
-			driver.manage().window().maximize();
-			driver.manage().deleteAllCookies();
-			driver.manage().timeouts().pageLoadTimeout(20, TimeUnit.SECONDS);
-			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-			
-			driver.get(prop.getProperty("url"));
-		}
-		
+            WebElement fullScreenButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@title='Full screen (f)']")));
+            fullScreenButton.click();
+            actions.moveToElement(driver.findElement(By.xpath("//div//video[@class='video-stream html5-main-video']"))).perform();
+
+            WebElement exitFullScreenButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@title='Exit full screen (f)']")));
+            exitFullScreenButton.click();
+            actions.moveToElement(driver.findElement(By.xpath("//div//video[@class='video-stream html5-main-video']"))).perform();
+
+            WebElement theaterModeButton = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//button[@title='Theater mode (t)'] | //button[@data-title-no-tooltip='Cinema mode']")));
+            theaterModeButton.click();
+
+            Thread.sleep(5000); 
+         
+            driver.quit();
+    }
+    
 }
